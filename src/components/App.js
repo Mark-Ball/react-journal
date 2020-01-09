@@ -16,8 +16,17 @@ class App extends Component {
         });
     }
 
+    deleteEntry = (index) => {
+        return () => {
+            console.log(`Deleting entry at index ${index}`);
+            this.setState((state, props) => {
+                return { entries: state.entries.filter((e, i) => i !== index) }
+            });
+        }
+    }
+
     render () {
-        const { categories } = this.state;
+        const { categories, entries } = this.state;
 
         return (
             <>
@@ -26,7 +35,9 @@ class App extends Component {
                         <Link to='/'>Home</Link>
                         <Link to='/category'>Category Selection</Link>
                         <Link to='/entry'>New Entry</Link>
-                        <Route exact path='/' component={Home} />
+                        <Route exact path='/' render={(props) => {
+                            return <Home {...props} entries={entries} deleteEntry={this.deleteEntry} />
+                        }} />
                         <Route exact path='/category' render={(props) => {
                             return <CategorySelection {...props} categories={categories} />
                         }} />
